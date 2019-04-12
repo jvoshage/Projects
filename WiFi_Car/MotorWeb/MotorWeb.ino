@@ -69,7 +69,7 @@ void setup(void){
   pinMode(MOTOR_B_POWER, OUTPUT);
   pinMode(MOTOR_B_DIRECTION1, OUTPUT);
   pinMode(MOTOR_B_DIRECTION2, OUTPUT);
-
+  
   digitalWrite(MOTOR_A_DIRECTION1,HIGH);
   digitalWrite(MOTOR_A_DIRECTION2,LOW);
   digitalWrite(MOTOR_B_DIRECTION1,HIGH);
@@ -79,7 +79,7 @@ void setup(void){
   WiFi.disconnect();
   delay(100);
   
-  Serial.begin(115200);
+  Serial.begin(9600);
   WiFi.begin(ssid, password);
   Serial.println("");
 
