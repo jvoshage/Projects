@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Jacob Voshage</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+		}
+		.container-fluid, .col-sm-3 {
+			background-color: black;
+			color: white;
+		}
+
+		.nav-stacked {
+			background-color: #191919;
+			padding-bottom: 15px;
+		}
+		.affix {
+			z-index: 9999 !important;
+			position:fixed;
+			max-width:150px;
+			}
+		body {
+			position: relative;
+		}
+		@media screen and (max-width: 992px) {
+			.affix  {
+				position: relative;
+				max-width:unset;
+			}
+		}
+		.description {
+			font-size: 16px;
+		}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#navSpy" data-offset="-15">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li class="active"><a href="../projects.html">Projects</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid bg-3 ">    
+	<div class="row">
+		<div class="col-md-2 section-nav" id="navSpy" style="margin-top: 30px;">
+			<ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="0" >
+				<h4 class="text-center">Contents</h4>
+				<li class="active"><a href="#Purpose">Purpose</a></li>
+				<li><a href="#First-designs">First Designs</a></li>
+				<li><a href="#PCB-1">PCB 1</a></li>
+				<li><a href="#PCB-2">PCB 2</a></li>
+				<li><a href="#MQTT-ESP-Connection">MQTT-ESP Connection</a></li>
+				<li><a href="#GPIO-Pins">GPIO Pins</a></li>
+				<li><a href="#Webpage">Webpage</a></li>
+				<li><a href="#PCB-3">PCB 3</a></li>
+				<li><a href="#PCB-4">PCB 4</a></li>
+				<li><a href="#3D-printing-the-case">3D Printing the Case</a></li>
+				<li><a href="#Circuit-simulation">Circuit Simulation</a></li>
+				<li><a href="#Google-account-connection">Google Account Connection</a></li>
+				<li><a href="#WiFi-auto-connect">WiFi Auto Connect</a></li>
+				<li><a href="#PCB-5">PCB 5</a></li>
+			</ul>
+		</div>
+
+		<div class="col-md-9">	
+			<h2 class="text-center">WiFi Switch</h2>
+			<h3 id=Purpose>Purpose</h3>
+			<p class="description">
+				Smart home technology is on the rise. I would like to take advantage of this technology to control the home I live in. Unfortunately this is difficult and expensive to do since the infrastructure is not in place for it. The main thing I want to control is lighting. I know there are smart light bulbs out there that connect to a smart assistant but then you could not use the light switches anymore so it’s really only useful for lamps.
+			</p>
+
+			<h3 id=First-designs>First Designs</h3>
+			<p>02/13/2018</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						I breadboarded a circuit that can control an LED by a regular wall switch as well as one on the internet. This created a 3-way switch setup. I wanted to design this so that I could control lights and such from a smart home assistant but maintain the old simplicity of using a wall switch. I planned to further design this circuit to use it in a real home situation. The next step was soldering the circuit on perfboard and setting up a better online side of the switch. At this time, I was using an ESP8266-01 to host a webpage and then using my laptop to go to the IP address to control the LED.
+					</p>
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/first-breadboard.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/first-perfboard.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-xs-12">
+					<br>
+					<p class="description">
+						I did some more testing with the breadboard circuit to make sure that a regular AC wall switch will indeed control the LED as I expect. Putting one into the circuit showed that it will work. Then I began the layout for the perfboard. The board needs to be as small as possible. Unfortunately, this is hard to do due to needing the relay, ESP, and 5v DC converter which all take a significant amount of room.
+					</p>
+				</div>
+			</div>
+			
+			<h3 id=PCB-1>PCB 1</h3>
+			<p>06/22/2018</p>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="description">
+						From there I proceeded to build my first circuit board. I left some room for the 5v converter that I was using as well as for the switch to be attached to the board somehow. I built the circuit on the PCBs I ordered. I had to add a resistor to the circuit that was not originally on the plans. It was necessary to make sure GPIO 0 is pulled high on boot. I figured this out when working on another project that dealt with the ESP01. The new circuit has a 5kOhm resistor connecting the pin to the transistor base and a 1kOhm resistor connecting the pin to 3.3V.
+					</p>
+					<br>
+					<img src="images/wifi-switch/PCB01.PNG" class="img-responsive" style="max-height: 300px; margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-md-3">
+					<img src="images/wifi-switch/PCB01_front.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-md-3">
+					<img src="images/wifi-switch/PCB01_back.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<br><br>
+					<p class="description">
+						It was not difficult to implement this new circuit with the old boards. Once I did this the ESP booted up fine. I decided to write up new code for this prototype so that it is controlled from Adafruit’s MQTT system. Using MQTT is much better than hosting a server because it can be controlled from anywhere. Most smart home devices use MQTT protocol. The challenge with the code was putting the physical switch controller in. The MQTT subscription reader is in a while loop that runs for 5 seconds. I'm not sure why 5 seconds or if it had to be that long but I decided not to change it. I could not find any explanation online. I put the checkSwitch function first after the strcmp if statement and that did not work at all. I moved it to after the while loop and that worked after a couple seconds. The switching was not instantaneous because the while loop had to finish running before it could check on the switch. After talking it through with my dad, I realized that an interrupt would fix my issue. I had no prior knowledge of using interrupts, so I did some research. One helpful site was:<br>
+						<a href="https://www.allaboutcircuits.com/technical-articles/using-interrupts-on-arduino/" target="_blank">https://www.allaboutcircuits.com/technical-articles/using-interrupts-on-arduino/</a><br><br>
+						Here they demonstrated a simple button before using an interrupt and after. I copied this code into my sketch, and it did not work properly. Sometimes the switch would work and then the online button wouldn’t and other times it was the opposite. After taking another break I realized that I was treating the switch as a button. I ended up combining the old code and the interrupt so that when the switch is changed it checks the previous state to the current state and when they are different it toggles the output. This solved my problem and the switch worked as desired.
+						I briefly tested the switch and was successfully able to control my lamp and my stand fan from both controls. I was not able to control my dad’s stand fan which is like mine. The relay clicked when I plugged it in and when I tried to turn it on the blue LED on the ESP lit up and I unplugged the circuit because that is a bad sign. I do not know what is causing this. <br><br>						
+						In the next iteration of the circuit I want to investigate using different parts. An optocoupler would be better than a relay because the circuits would be separate. An optocoupler may also be smaller allowing the circuit to be smaller.
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<img src="images/wifi-switch/PCB01-front-built.jpg" class="img-responsive" style="width: 75%; margin-right: auto; margin-left: auto;">
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/PCB01-back-built.jpg" class="img-responsive" style="width: 75%; margin-right: auto; margin-left: auto;">
+				</div>
+			</div>
+			
+			<h3 id=PCB-2>PCB 2</h3>
+			<p>07/02/2018</p>
+			<div class="row">
+				<div class="col-md-8">
+					<p class="description">
+						I redesigned the PCB so it would take up less room. I managed to make it about half as long by removing the switch area. I think it would be best if the switch was not attached. This is because the switch could be different, and the screws may not always be on the same side or location.
+					</p>
+				</div>
+				<div class="col-md-4">
+					<img src="images/wifi-switch/PCB02.png" class="img-responsive" style="margin-right: auto; margin-left: auto;">
+				</div>
+			</div>
+
+			<h3 id=MQTT-ESP-Connection>MQTT-ESP Connection</h3>
+			<p>7/10/2018</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						I had some ideas about how to do the MQTT broker setup with the switches. Basically, each switch would have something like a 4-digit number and that would be the feed name since each would probably need its own feed. I could also add some characters at the end of each feed that are constant if I wanted to make sure only my devices connect but I’m not sure that's necessary. 
+						
+						I looked into how to host a MQTT broker for as cheap (free) as possible. I decided on Amazon Web Services (AWS) because they have their free tier of computing. I signed up for an account and launched an ec2 ubuntu 16.04 t2.micro instance. By following a guide at <a href="http://blog.yatis.io/install-secure-robust-mosquitto-mqtt-broker-aws-ubuntu/" target="_blank">http://blog.yatis.io/install-secure-robust-mosquitto-mqtt-broker-aws-ubuntu/</a>, I was able to get the server up and running then subscribe and publish to a test topic.
+
+					</p>
+				</div>
+				<div class="col-md-5">
+					<br>
+					<p class="description">
+						I am thinking that the system will work something like this. The ESP will subscribe and publish to the same topic to streamline everything.
+					</p>
+				</div>
+				<div class="col-md-7">
+					<img src="images/wifi-switch/mqtt-esp_connection.jpg" class="img-responsive">
+				</div>
+				<div class="col-xs-12">
+					<br><br>
+					<p class="description">
+						Once the server was up and running, I began working on connecting the ESP to the server. I found a great tutorial online to help me get started: <a href="https://techtutorialsx.com/2017/04/09/esp8266-connecting-to-mqtt-broker" target="_blank">https://techtutorialsx.com/2017/04/09/esp8266-connecting-to-mqtt-broker</a><br><br>
+						I followed the tutorial and was able to connect to the server when I filled in my information and used port 1883. I began to edit the code by adding a strcmp in the callback function to see if I could read the incoming data as I expected. It was a success and I moved the rest of the functions over into the new code. I began to run into issues with the strcmp in the callback function. First, strcmp returns 0 when the strings are equal. I added a “not” (!) to fix this. Second, the payload is a byte array that I am casting into a char*. I was able to detect me publishing “ON” and it said “Switch ON” like I expected. But when I publish “OFF”, it says “Switch ON”. This was fixed from the first issue. Every once in a while I publish to the feed and get nothing in the serial monitor. 
+						<br><br>
+						I added an else in the callback to have it print the received message byte by byte in a for loop. I was able to see the published message fine. I changed the else so that it prints the char pointer casted payload and was surprised to see that when I published “mqtt_off”, the serial monitor displayed “mqtt_offNESP8266Client”. I published “hello world” and received “hello worldP8266Client”. Finally, I published a blank string “” and got the same result “hello worldP8266Client” This must mean that the payload variable is not getting reset which makes sense since it is just a pointer. To fix this I will use the length parameter to make sure it reads the proper amount of characters. I simply replaced the character at location “length” with the end of line char to make sure strcmp knows when to stop reading. Since char arrays are zero based “length” was the proper location to do this. Now testing the code on the actual switch works as expected. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id=GPIO-Pins>GPIO Pins</h3>
+			<p>07/23/2018</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						On the ESP8266, there are 2 GPIO pins and 2 pins for Serial (TX and RX). But if serial is not needed, these pins can be treated like regular digital pins. This is what I did to get the number of pins that I need to detect the switch and control the relay. But one major problem I've been having is that if the switch is on during boot, it doesn't boot properly. It occurred to me that this might be due to the switch pulling GPIO to GND. So, I thought to myself "What if I instead pulled it HIGH?" This should result in a proper boot. Doing some research led me to find some information about how the GPIO pins should be used. <br><br>
+						<ul>
+							<li>GPIOs 4 and 5 are the only ones that are always high impedance. All others do have internal pull-ups or are even driven low/high during boot.</li>
+							<li>GPIOs 3, 12, 13 and 14 pulled HIGH during boot. Their actual state does not influence the boot process.</li>
+							<li>GPIOs 0, 1, 2 and 15 are pulled HIGH during boot and also driven LOW for short periods.</li>
+							<li>The device will not boot if 0, 1 or 2 is driven LOW during start-up.</li>
+							<li>GPIO 16 is driven HIGH during boot, don't short to GND.</li>
+						</ul>
+					</p>
+					<br>
+					<p class="description">
+						This would explain why I get blinking on boot up. The issue is that if I used GPIO 3 for the output, the switch has to be off for the device to boot if connected to either 0, 1 or 2. I came up with a couple different solutions for how to solve this problem.<br><br>
+
+						<u>Problem:</u> I want a steady output during boot and need the ESP to not care what state the switch is in. There are only 4 GPIO pins on the ESP01 and 3 of them cannot be LOW during boot. Those same 3 flash LOW/HIGH during boot so there is no steady output.<br><br>
+						<u>Solution 1:</u> Connect the switch to the “stable” GPIO 3 and ignore the flashing of the output on boot. This is a simple fix and is cheap.<br><br>
+						<u>Solution 2:</u> Create a custom switch that is just a button instead that is pulled LOW on press. This could connect to any GPIO 0,1 or 2 so 3 is left for the output. This is a major change but still somewhat simple. This removes the idea of “keep your switches; just make them smart”.<br><br>
+						<u>Solution 3:</u> Use some form of memory device that remembers the state of the output. GPIO 3 can then be used for input. This is a very complicated and expensive solution because it requires more components and a reworking of the circuit.<br><br>
+						<u>Solution 4:</u> Instead of using GND to detect the switch, use two GPIO pins. One set as output and set to LOW and the other as input. This way the pins are floating during boot (although they probably should be pulled HIGH) and can still operate as expected. This is a simple fix and should require no extra components.<br><br>
+					</p>
+				</div>		
+			</div>
+			<div class="row">		
+				<div class="col-md-6">
+					<p class="description">
+						Solution 4 seems to be the best solution so far due to its simplicity. So, I went ahead and built the new circuit on the breadboard. Pins 0 and 2 are used for the switch and pin 1 is used as an output. To make the switch work, GPIO 0 is set as an output in the setup and GPIO 2 is set as an input. Then GPIO 0 is set LOW and the variable ‘currentState’ is updated with a digitalRead of pin 2. Then the code proceeds with setting up the wifi and MQTT and then the turnOff function is ran so the server knows what state the switch is in. Based on the breadboard without a relay, there is no more output flickering during boot. With that, I soldered up this new circuit on a PCB. Instead of making a whole new one, I just modified the last one I made that did not work. It was a simple matter of just removing some wires and adding resistors.
+					</p>
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/smooth-startup.jpg" class="img-responsive" style="max-height: 240px; margin-left: auto; margin-right: auto;">
+				</div>
+			</div>
+			<div class="row">
+				<br>
+				<div class="col-md-4">
+					<img src="images/wifi-switch/smooth-startup-breadboard.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;"><br>
+				</div>
+				<div class="col-md-4">
+					<img src="images/wifi-switch/smooth-startup-PCB03_front.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;"><br>
+				</div>
+				<div class="col-md-4">
+					<img src="images/wifi-switch/smooth-startup-PCB03_back.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;"><br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<br>
+					<p class="description">
+						I tested the new PCB after seeing promising results on the breadboard. Unfortunately, it did not boot properly. I went back to the breadboard and put a transistor with the relay on it to test the full circuit. Testing gave the same results. I found it was able to boot if the wire connecting the GPIO pin to the transistor base was disconnected. After booting, I reconnected it and once the relay turned on from flipping the switch, I was not able to turn it off. Therefore, I added an LED from the output GPIO to the transistor base and was able to get it working. I did discover that there was a startup blink. I thought I had solved that problem. After looking at the code and circuit for a little, I realized I was using GPIO 1 instead of 3 like I originally planned. Therefore, circuit above is slightly wrong. 
+					</p>
+					<br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<img src="images/wifi-switch/smooth-startup2.jpg" class="img-responsive" style="max-height: 300px; margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/smooth-startup-breadboard2.jpg" class="img-responsive" style="max-height: 400px; margin-left: auto; margin-right: auto;">
+				</div>
+			</div>
+
+			<h3 id=Webpage>Webpage</h3>
+			<p>07/31/2018</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						Ideally, I want a webpage that can control the devices you have connected to the network. I learned how to connect to the mosquitto server using Paho. By utilizing example code found on <a href="https://github.com/jpmens/simple-mqtt-websocket-example" target="_blank">Github</a>, I was able to subscribe and publish to my test topic. I wanted to put slide toggle switches on the page for controlling the devices and monitoring their state. For that I began learning how to display and use those. There is a basic tutorial on <a href="https://w3schools.com/howto/howto_css_switch.asp" target="_blank">w3schools.com</a>.<br><br>
+						I made my css file and used the code on the example. The tutorial did not explain or show how to run the code when the switch was on or off or how to dynamically change it. I figured out that just adding an onclick parameter was enough. By giving it an id, I could change the state programmatically by finding the element by ID and setting the checked parameter to true or false since it was just a checkbox that looks different. 
+					</p>
+					<!--
+						More webpage stuff 8/19/18
+					-->
+				</div>
+			</div>
+
+			<h3 id=PCB-3>PCB 3</h3>
+			<p>08/09/2018</p>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="description">
+						I came across a component that will be very useful in this project. The HLK-PM01. It can take an AC voltage and outputs 5VDC. Before this I was using disassembled USB chargers. This new component is about twice the size of the relay so fitting it into a small board is slightly challenging. However, the usefulness of this component is worth it. <br><br>
+						Because I have this new component, a third iteration of the PCB was designed. The HLK-PM01 was used as the AC-DC converter and surface mount packages were used of the passive components. This board ended up measuring 40mmx45mm which is a vast improvement from the first design, yet I think it could be better.
+					</p>
+				</div>
+				<div class="col-md-6">
+					<img src="images/wifi-switch/PCB03.PNG" class="img-responsive" style="max-height: 300px; margin-right: auto; margin-left: auto;">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<br>
+					<p class="description">
+						In order to make the design better, I considered using a different version of the ESP8266 module. I wanted to continue using the module instead of integrating my own because the module is already FCC certified. In addition, I wanted to continue with the ESP8266 so that the current code will work on other modules as well. Researching different modules led me to the table shown below from <a href="https://www.happybison.com/reviews/esp8266-based-esp-modules-10/" target="_blank">https://www.happybison.com/reviews/esp8266-based-esp-modules-10/</a>. Automatically I ruled out any module that does not have an antenna. That left 01, 03, 07, 11, and 12. Of these options, 11 does not have enough GPIOs available. The smallest option is the ESP-03 and it has enough GPIO pins at a similar price point. However, I did not end up purchasing or trying any because many of the passive components on the board live under the ESP-01 and that space would be lost with the ESP-03.
+					</p>
+					<img src="images/wifi-switch/ESP-versions.PNG" class="img-responsive" style="margin-right: auto; margin-left: auto;">
+				</div>
+			</div>
+
+
+			<!--
+				Enter missing entries ACL and PHP
+			-->
+			
+			<h3 id=PCB-4>PCB 4</h3>
+			<p>08/17/2018</p>
+			<div class="row">
+				<div class="col-sm-8">
+					<p class="description">
+						While looking back at my first prototype, I realized I could make a device that goes around the switch. I took some measurements of various types of switches and determined that it may not be possible after all. Despite this I continued and created the fourth iteration of the PCB. This time I set the board outline first and fit all the components in that space. This board ended up with a size of 27mmx67mm. This is the same area as PCB03 but a different shape. 
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<br>
+							<p class="description">
+								With this new board shape and the idea of working around the switch, I came up with an idea on how to fit everything in the electrical box. The circuit would be attached to a bracket that goes around the top and bottom of the switch. The entire thing then gets screwed in place when the switch is inserted. This bracket would be designed to fit around all types of switches. 
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img src="images/wifi-switch/switch-bracket.jpg" class="img-responsive" style="max-height: 300px; margin-right: auto; margin-left: auto;">
+							<br>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<img src="images/wifi-switch/PCB04.PNG" class="img-responsive" style="max-height: 500px; margin-right: auto; margin-left: auto;">
+				</div>
+			</div>
+
+			<h3 id=3D-printing-the-case>3D Printing the Case</h3>
+			<p>09/08/2018</p>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="description">
+						I designed a case for PCB 4 using the idea of a bracket that can go around the switch. By using a snap design, the box and lid can be assembled without extra hardware. After designing both the lid and box, I made an assembly file in Inventor to see what it would look like. It was a good thing that I did because the lid was 4mm too short and the clips were facing the wrong direction. After fixing those issues, the assembly looked correct and I printed the model. I oriented the pieces so that the box and lid were on its side so the clips and arms would have the most strength. Once the parts were finished, I discovered that the lid did not snap on well and the PCB did not fit because there was not enough tolerance.
+					</p>
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<img src="images/wifi-switch/c2-box.PNG" class="img-responsive" style="max-height: 250px; margin-right: 5; margin-left: auto;">
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<img src="images/wifi-switch/c2-lid.PNG" class="img-responsive" style="max-height: 250px; margin-right: auto; margin-left: 5;">
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="description">
+						For the next version I decided to have the arms that go around the switch to be a part of the lid. This proved to be a much better because it can be 3D printed easier. 
+					</p>
+				</div>		
+				<div class="col-xs-6 col-md-3">
+					<img src="images/wifi-switch/c3-box.PNG" class="img-responsive" style="max-height: 250px; margin-right: 5; margin-left: auto;">
+				</div>
+				<div class="col-xs-6 col-md-3">
+					<img src="images/wifi-switch/c3-lid.PNG" class="img-responsive" style="max-height: 250px; margin-right: auto; margin-left: 5;">
+				</div>
+			</div>
+
+
+			<h3 id=Circuit-simulation>Circuit Simulation</h3>
+			<p>09/09/2018</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						While doing some work for school, I came across an online circuit simulator. I drew a part of the switch circuit and found out that I was shorting the ESP to ground through the transistor. Therefore, putting the LED in series with the transistor base helped make the circuit work because of the small voltage drop across the LED. When I inserted the LED in the simulation, I saw a high current draw from the 3.3v line. The ESP has a 12mA max current draw from the pins and I believe that the current circuit is taking all of that. I replaced the LED in the simulation with a 100Ohm resistor and saw a 25.7mA draw. When the resistor was changed to 1kOhm the current dropped to 2.59mA. Since the circuit with the 1kOhm resistor is still able to trigger the relay, I changed the LED in the circuit to a 1kOhm resistor.
+					</p>
+				</div>
+			</div>
+
+			<h3 id=Google-account-connection>Google Account Connection</h3>
+			<p>01/19/2019</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						Once I was happy with the hardware, it was time to develop ways to control these devices. To do that I wanted to connect my switch to Google Assistant. Turns out this is a very difficult task. It is possible to make Assistant apps but then I would have to issue a command like “Hey Google tell Bridge to turn on the lights”. This is too long and not very usable. I would like to just say “Hey Google turn on the lights” and have it work. So, Google does not play so nice with MQTT, and IFTTT won't work either. I did some research online on how to do this and came across a service that does what I would like to do. The service name is gBridge. <a href="https://about.gbridge.io/" target="_blank">https://about.gbridge.io/</a>. It is open source and has a tutorial on how to host my own service. In the instructions it says I need to have a secure site. Turns out, by using LetsEncrypt I can get an HTTPS Certificate for free. I followed the steps on the LetsEncrpyt tutorial page and was able to get all the server-side stuff done quickly. I told it to redirect all traffic to the HTTPS site. When I reloaded my page, it did not load. I had to set a new inbound rule on the AWS security group to allow access to port 443. After doing this the page loaded fine but with a new error: Mixed content. My websocket connection uses HTTP which is a lower security level than HTTPS so it does not allow the connection. <br><br>
+						Considering all of these issues I am starting to wonder if using a HTTP request method for controlling everything would be easier. It would probably play nicer with the webpages and would allow use with IFTTT. IFTTT is not a perfect solution for what I want to do but it is at least functional. It will take a while to get a real Google Assistant service up and running. I came across this webpage while researching: <a href="http://tinkerman.cat/using-google-assistant-control-your-esp8266-devices/" target="_blank">http://tinkerman.cat/using-google-assistant-control-your-esp8266-devices/</a>. Here the author talks about how he uses HTTP on an internal network to control things and HTTPS on the internet. This could be an option for controlling the entire setup. It is starting to seem like using MQTT was a nice idea but now requires converting the messages to some other form in order to interface with the system. If I do not use the HTTP method, I may have to go back and re setup the current server with the HTTPS stuff. (Like Mosquitto and Paho). <br><br>
+						
+						To use Google Assistant, I need to be able to handle the web requests and convert them to messages in MQTT. To do this I started writing PHP programs that can run on my Amazon web service. I quickly figured out how to receive and respond to JSON POST requests in php. I wrote a simple little webpage that receives the request, decodes it, re encodes it, and sends that as a reply. Then I wrote the sync intent handling for Google Assistant. I am putting all the GA handling in its own file called gapi.php. Google lists out what requests the GA will make and what it expects as a response at <a href="https://developers.google.com/actions/smarthome/create" target="_blank">https://developers.google.com/actions/smarthome/create</a>. Using this I was able to make a complicated nesting of while loops to grab all the data from four new tables I made in the ACL (Access Control List) database. I created these to put all the properties of items together just like Google does.<br><br>
+
+						With these tables, I will store all the necessary information. The next step is to write the Query and Execute functions into the page. This may be difficult because the devices are controlled via MQTT and their state is not held in the database. I will likely need to create a websocket to send MQTT messages to the devices in order to control them. So far, I have been unsuccessful at creating the websocket for HTTPS. After those two functions are written, I need to work on verifying the user once they sign into the webpage. I was able to see the Actions on Google project I made in Google Assistant and it took me to my webpage. Once I can sign in, I just have to hope that everything works.
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<h4>Mosquitto-PHP Connection</h4>
+					<p>02/03/2019</p>
+					<p class="description">
+						I had an idea about using php to connect to the mosquitto broker instead of setting up a websocket and going through that in order to communicate with the physical devices. Turns out there is a mosquitto extension that allows for just that. <a href="https://mosquitto-php.readthedocs.io/en/latest/overview.html" target="_blank">https://mosquitto-php.readthedocs.io/en/latest/overview.html</a>. With Mosquitto-PHP installed on the server as per the instructions, I ran a test script to see if it would work. At first it didn’t but after restarting the apache service I was able to run the script to turn on my lamp.
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-xs-offset-2">
+					<p><i>
+						$client = new \Mosquitto\Client();<br>
+						$client->onConnect('connect');<br>
+						$client->onDisconnect('disconnect');<br>
+						$client->onSubscribe('subscribe');<br>
+						$client->onMessage('message');<br>
+						$client->setCredentials("*******","*******");<br>
+						$client->connect("localhost", 1883, 60);<br>
+						$client->subscribe('L00000', 1);<br>
+						<br>
+						//while (true) {<br>
+						  $client->loop();<br>
+							$mid = $client->publish('L00000', "MQTT_ON", 1, 0);<br>
+							echo "Sent message ID: {$mid}\n";<br>
+							$client->loop();<br>
+							sleep(2);<br>
+						//}<br>
+						$client->disconnect();<br>
+						unset($client);<br>
+						function connect($r) {<br>
+							echo "I got code {$r}\n";<br>
+						}<br>
+						function subscribe() {<br>
+							echo "Subscribed to a topic\n";<br>
+						}<br>
+						function message($message) {<br>
+							printf("Got a message ID %d on topic %s with payload:\n%s\n\n", $message->mid, $message->topic, $message->payload);<br>
+						}<br>
+						function disconnect() {<br>
+							echo "Disconnected cleanly\n";<br>
+						}<br>		
+					</i></p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						Now that communication is possible, I could begin work on the QUERY part of the gapi page. The problem I have been having is that it will listen to the message it just sent and not read the state message. I was going to make it work by saying, if you hear back from the ping then the device is online, and it just told you it’s state. If you hear nothing, then it must not be online. This was the simplest logic, but it is not working as simply as I had hoped. I may have to use the "Last Will and Testament" feature of the MQTT protocol to keep track of offline devices in a database table. This does not sound as simple as I had hoped. <br><br>
+
+						After I finished the Query part of the API, I updated the code to write the message and topic to a global variable in order for it to be available later in the code when it compiles the first device object. Each device is added to this object until the for loop ends and then that object is added with the other information to formulate the complete response that the page will send. I just have to remove some of the debugging echo lines and it will be mostly complete. The next step is the Execute function. This should be much easier since I am simply publishing an event to a topic. <br><br>
+
+						The execute function was a bit more involved than I thought it would be. It required that I check to make sure the execution was successful. I was able to perform this with ease since I had figured that part out while doing the query part. I put the client loops in while loops until the subscription finished or a message came in just to make sure that any network latency does not mess up the results of the operation. I may need to do this for the query function as well. <br><br>
+
+						My code should now be able to handle sync, query, and execute requests from google assistant. More error checking will probably be needed. The disconnect request will also need to be added. Before I can do that, I need to handle the logins from google. <br><br>
+
+						After quite some time I got some basic code working that can verify the Google oauth token created when signing in. First the user signs into Google on the login page. I have not gotten the id token to automatically get sent to the verify page so for now it has to be manually submitted. Once submitted verify page uses the Google Client library to verify the sent token. When verified, the code dumps all the user information on the page. Obviously, this behavior will change but this is how I was able to determine that the code worked. I also tested the code giving it a key that I changed some letters of, and I received a message saying Unauthorized Request. It seems like the hard part is done now. Next, I need to figure out what the Google Home setup needs to add the device to the account. <br><br>
+
+						The instructions I followed to get this working can be found on:<br>
+						<a href="https://developers.google.com/api-client-library/php/start/installation" target="_blank">https://developers.google.com/api-client-library/php/start/installation</a><br>
+						<a href="https://developers.google.com/identity/sign-in/web/backend-auth" target="_blank">https://developers.google.com/identity/sign-in/web/backend-auth</a><br><br>
+
+						From reading <a href="https://developers.google.com/actions/smarthome/" target="_blank">https://developers.google.com/actions/smarthome/</a>, it seems like I need to send a SYNC request to the server after a successful login during setup. Google sends information through a GET request which contains the URL to go to and a state variable that needs to be returned. I had to add the ability to handle this in the login page and have it get passed to the verify page. It took a while to get this working because I could not figure out how to send a POST request using javascript where it will go to the page. Because of this I made a form that the javascript code fills out and the user has to press send to move on. I think this might be a good thing because I want to display the user information before continuing in case they are already signed in. That way they can sign in with the correct account. Using my phone, I was able to test that the verify page works as far as getting all the data together and verifying the id token. <br><br>
+
+						While I was at it I changed the account database to store the googleID, first and last name, email, picture and the googleClientID. From reading <a href="https://developers.google.com/actions/identity/oauth2" target="_blank">https://developers.google.com/actions/identity/oauth2</a>, it seems like I have to generate an access token for each user. I did this and stored it in the database. I could probably replace the id column with this one in the future. I haven't figured out if I am supposed to send that in the url along with the state or my client id for the project. I tried both and I get “account linking failed” for both cases. This is where I got stuck. I also realized that the SYNC function I wrote returns every device for every user in the database. I did this because I cannot figure out which user is being synced from the request that comes in. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id=WiFi-auto-connect>WiFi Auto Connect</h3>
+			<p>03/10/2019</p>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						After having many issues with the devices not reconnecting after the wifi disconnects for a while, I have decided to finally fix the issue. Before the devices would not reconnect to the MQTT server if the wifi went down for a bit. Now I fixed the function that was supposed to check and handle this to actually work. I also grabbed code from the WiFiManager examples in the arduino library to implement a LED status indicator. The blue LED will blink while connecting and if it cannot connect to the wifi and goes into setup mode, will blink faster. Once a connection is made the led will turn off. But once the mqtt connection is detected as disconnected, the led turns back on and tries to reconnect. The wifiManager library handles reconnection to the wifi so the only thing I had to do was have it reconnect to my server. Once it does that the led will turn back off and functionality resumes as normal.
+					</p>
+				</div>
+			</div>
+
+
+			<h3 id=PCB-5>PCB 5</h3>
+			<div class="row">
+				<div class="col-xs-12">
+					<p class="description">
+						
+					</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<footer class="container-fluid text-left">
+  <br><br>
+  <p>© 2020 Jacob Voshage</p>
+</footer>
+
+</body>
+</html>

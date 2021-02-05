@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Jacob Voshage</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+		}
+		.container-fluid, .col-sm-3 {
+			background-color: black;
+			color: white;
+		}
+		.jumbotron {
+			background-color: #191919;
+			color: white;
+			margin-bottom: 0px;
+		}
+		.nav-stacked {
+			background-color: #191919;
+			padding-bottom: 15px;
+		}
+		.affix {
+			z-index: 9999 !important;
+			position:fixed;
+			max-width:150px;
+			}
+		body {
+			position: relative;
+		}
+		@media screen and (max-width: 810px) {
+			.affix  {
+				position: relative;
+				max-width:unset;
+			}
+		}
+		.description {
+			font-size: 16px;
+		}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#navSpy" data-offset="-15">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li class="active"><a href="../projects.html">Projects</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid bg-3 ">    
+
+	<div class="row">
+		<div class="col-md-2 section-nav" id="navSpy" style="margin-top: 30px;">
+			<ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="0">
+				<h4 class="text-center">Contents</h4>
+				<li class="active"><a href="#Concept">Concept</a></li>
+				<li><a href="#Design">Design</a></li>
+				<li><a href="#PCB-design">PCB Design</a></li>
+				<li><a href="#Code">Code</a></li>
+				<li><a href="#Testing">Testing</a></li>
+				<li><a href="#Conclusion">Conclusion</a></li>
+      </ul>
+		</div>
+		<div class="col-md-9">	
+			<h2 class="text-center">Audio Controller</h2>
+			<p>Created: 05/04/2020</p>
+			<h3 id=Concept>Concept</h3>
+			<p class="description">
+				This all started when I decided to connect my 5.1 computer speaker system to the TV in my living room. For awhile, I had to get up and manually turn the knob on the right speaker to adjust the volume of the TV. This was less than ideal. What I wanted was to be able to control the speaker volume by using the Roku remote like I normally would without the speakrs connected. I could just buy better speaker that are meant for this setup or even buy an audio reciever to put between the TV and the speaker system but what's the fun in that?
+
+				So I created a list of requirements:
+			</p>
+			<ul class="description">
+				<li>Control full range of volume</li>
+				<li>Controlled by Roku remote</li>
+				<li>Display/indicate volume level</li>
+			</ul>
+			<p class="description">
+				The first step was to make sure this was possible. I set up a test where I used a 10k potentiometer in series of the audio signal line to control the volume. This worked great and I was able to achieve volumes so low they were inaudible and also max volume which was still quite loud. 
+				I have made other simple projects in the past which use remote control IR signals so i knew how to do this and knew it was possible.
+				To display the volume of the output, using two 7 segments seemed like the best choice. The other option I considered was using some LEDs to indicate 1-10 how loud the output was but I was not completely happy with this idea. 
+			</p>
+
+			<h3 id="Design">Design</h3>
+			<p class="description">
+				The potentiometer worked well during testing so I found a digital potentiometer that should do the same. I found one that was controlled via I2C which seemed simpler and also used less digital pins. I did not pay to much attention to the package size of this chip and once I received them I realized how hard it was going to be to solder. 
+			</p>
+			<p class="description">
+				After I knew how many data lines were necessary I went to choose the microcontroller. I just wanted to use one that I had lying around so there were really two that I considered:
+				<ol>
+					<li>Arduino Nano
+						<ul>
+							<li>14 digital pins, 5 analog pins</li>
+							<li>5V logic</li>
+							<li>I2C support</li>
+						</ul>
+					</li>
+					<li>NodeMCU (ESP12)
+						<ul>
+							<li>11 digital pins, 1ADC</li>
+							<li>3.3V logic</li>
+							<li>WiFi enabled</li>
+							<li>I2C support</li>
+						</ul>
+					</li>
+				</ol>
+				I chose the microcontroller based on what I had lying around so I did not need to purchase a new board or chip. 
+				I ended up choosing the ESP12 because it has the right amount of pins and has the added bonus of WiFi support. This allows me to create an online interface to control the volume from the internet instead of just a remote.
+			</p>
+			
+			<h3 id=PCB-design>PCB Design</h3>
+			<div class="row">
+				<div class="col-md-6">
+					<p class="description">
+						I created a PCB for this project for a couple of reasons:
+						<ol>
+							<li>Better way to connect all the 7 segment display lines</li>
+							<li>Clean, finished look</li>
+							<li>Easy to mount surface mounted components</li>
+						</ol>
+					</p>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-8">
+					<img src="images/audio-controller/circuit-diagram.png" class="img-responsive" >
+				</div>
+				<div class="col-md-4">
+					<img src="images/audio-controller/board-layout.png" class="img-responsive" >
+				</div>
+			</div>
+			<br>
+			<p class="description"></p>
+			The board design was just a matter of connecting all components together. I positioned the 7 segments so that they would be in the middle and the IR receiver so it would be near the middle. I wanted the input and output jacks to be at the bottom since they were large, and I put the digital potentiometers as close as I could to them to minimize any effects the PCB may have on the signal. Lastly, I left pin headers for the microcontroller to plug in instead of soldering it directly to the board so I can remove it if I want or replace it if I manage to fry it.
+
+			</p>
+			<h3 id=Code>Code</h3>
+			<p class="description">
+				The code was written in the Arduino IDE because I had many pieces of the code written there already and I was extremely familiar with coding in that environment. I stitched together some code from past projects that use WiFi or IR control and then added the necessary code for controlling the two seven segment displays and controlling the digital potentiometers. Some of the code features include: display timeout, a connection to Google Home through my smarthome newtwork, act as a remote control, over the air updates for the code, and a WiFi configuration page.   
+			</p>
+			<p class="description">
+				The connection to Google Home is done through a service called <a href="https://flows.nodered.org/node/node-red-contrib-nora">NORA</a>. It provides nodes in Node-RED for Google smart home device integration. Many of the other features were integrated using Arduino libraries. <a href="https://github.com/tzapu/WiFiManager">WiFi Manager</a> provides a portal to setup a WiFi connection so that those crednetials do not have to be hardcoded in. <a href="https://github.com/knolleary/pubsubclient">PubSubClient</a> is used for the MQTT connection and <a href="https://github.com/crankyoldgit/IRremoteESP8266">IRremoteESP8266</a> is used to create the IR signals used to control the devices. 
+			</p>
+			
+				
+			</p>
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="code/audio-controller/Audio-Controller.ino" target="_blank" class="description">View code in browser</a>
+				</div>
+				<div class="col-sm-6">
+					<a download="code/audio-controller/Audio-Controller.ino" target="_blank" class="description">Download Code</a>
+				</div>
+			</div>
+
+			<h3 id=Testing>Testing</h3>
+			<p class="description">
+				I connected everything as designed and found a couple of issues. First, there is static on some of the audible frequencies. Second, the full range of volume cannot be controlled. While I was testing this, I did not have an oscilloscope to look at how the signals were acting, so debugging this circuit was difficult. One thought I had was that a lack of ground plane on the PCB might be causing some feedback, but I would need to order new board and parts to test that. I did try connecting the audio ground to the power ground and disconnecting it to see what was better. I could not tell much of a difference but having them connected would seem to make sense to me. I still do not know why the volume control is not working. I figured it has something to do with the digital potentiometer chips so I measured the output resistance of the chip as I cycled through the resistor network and it went from near 0 to 10k as expected but was still not working.
+			</p>
+			<h3 id=Conclusion>Conclusion</h3>
+			<p class="description">
+				In the end, the project gained some additional features not required from the beginning. However, the design does not function as desired which is very disappointing. 
+			</p>
+			<p class="description">
+				One of the main lessons I learned here (and many times before) is to always check the package size of parts before ordering. It was extremely difficult to solder the potentiometer chips into place with my soldering iron I have. There is no need for them to be this small for this application. Perhaps in the future I will revisit this project when I get an oscilloscope or figure out why the digital potentiometer chips don’t work.
+			</p>
+			<div class="row">
+				<div class="col-md-6">
+					<img src="images/audio-controller/final1.jpg" class="img-responsive" style="margin-left: auto; margin-right: auto;">
+				</div>
+				<div class="col-md-6">
+					<img src="images/audio-controller/final2.jpg" class="img-responsive" style="margin-left: auto; margin-right: auto;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer class="container-fluid text-left">
+  <br><br>
+  <p>© 2020 Jacob Voshage</p>
+</footer>
+
+</body>
+</html>

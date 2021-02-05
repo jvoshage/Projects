@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Jacob Voshage</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+		}
+		.container-fluid, .col-sm-3 {
+			background-color: black;
+			color: white;
+		}
+		.jumbotron {
+			background-color: #191919;
+			color: white;
+			margin-bottom: 0px;
+		}
+		.nav-stacked {
+			background-color: #191919;
+			padding-bottom: 15px;
+		}
+		.affix {
+			z-index: 9999 !important;
+			position:fixed;
+			max-width:150px;
+			}
+		body {
+			position: relative;
+		}
+		@media screen and (max-width: 810px) {
+			.affix  {
+				position: relative;
+				max-width:unset;
+			}
+		}
+		.description {
+			font-size: 16px;
+		}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#navSpy" data-offset="20">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li class="active"><a href="../projects.html">Projects</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid bg-3 ">    
+
+	<div class="row">
+		<div class="col-md-2 section-nav" id="navSpy" style="margin-top: 30px;">
+			<ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="0">
+				<h4 class="text-center">Contents</h4>
+				<li class="active"><a href="#Abstract">Abstract</a></li>
+				<li><a href="#Overview">Overview</a></li>
+				<li><a href="#Device-control-system">Device Control System</a></li>
+				<li><a href="#Command-setup">Command Setup</a></li>
+				<li><a href="#Device-circuit">Device Circuit</a></li>
+				<li><a href="#Code">Code</a></li>
+      </ul>
+		</div>
+		<div class="col-md-9">	
+			<h2 class="text-center">Entertainment Controller</h2>
+			<p>Created: 6/11/2018</p>
+
+			<h3 id=Abstract>Abstract</h3>
+			<p class="description">
+				The goal of this project is to perform basic controls such as turning on devices, controlling volume and controlling media state using voice commands through a Google Home and Google Assistant.
+			</p>
+
+			<h3 id=Overview>Overview</h3>
+			<img src="images/entertainment-controller/overview-graphic.png" class="img-responsive" style="margin-left: auto; margin-right: auto;"> 
+			<br>
+			<ol class="description">
+				<li>Google Assistant receives a voice command from the user.</li>
+				<li>IFTTT handles this command and sends an MQTT message to the ESP through the Adafruit service. </li>
+				<li>The ESP receives this MQTT message and decifers which device(s) to control.</li>
+				<li>The proper IR signal is then sent from the IR LEDs to the devices to achieve the desired result.</li>
+			</ol>
+
+			<h3 id=Device-control-system>Device Control System</h3>
+			<p class="description">
+				Each device is labeled controlled from a two digit number. In order to control a device, the MQTT message contains first the device number directly followed by the button number. The resulting message will be a two digit number. For example, to send button 4 press to device 3, “34” is sent to the client. Multiple button controls can be sent in one message. This is achieved by simply concating the second and first command. The commands are executed from LSB to MSB. In continuation of the previous example, “3420” could be sent to the client to again press button 4 on device 3 and press button 0 on device 2. This method was chosen because numbers are easier to work with and use less data than strings and characters in the Arduino environment. Numbers can easily be split wherever needed to retrieve the correct command. 
+			</p>
+			<p class="description">
+				The devices are set up as shown below. Power is kept on the 0 button for consistency and the receiver inputs are put on the corresponding numbers for logics sake. This system can be expanded as is to support 9 devices and 10 buttons on each device. Device 0 is not used to prevent any errors from occuring in the math performed on the ESP due to a leading zero.
+
+				It should be possible to expand this further if need be to three digits instead of two thus allowing 100 buttons per device. It is also theoretically possible to use hexadecimal to get 16 devices and 16 buttons. Decimal was used in this case because it worked for what was needed and was simple to implement.
+			</p>
+			<br>
+			<img src="images/entertainment-controller/command-table.PNG" class="img-responsive" style="margin-left: auto; margin-right: auto;">
+
+			<h3 id=Command-setup>Command Setup</h3>
+			<div class="row">
+				<div class="col-md-8">
+					<ol class="description">
+						<li>Go to ifttt.com and sign in</li>
+						<li>Click on “My Applets” at the top</li>
+						<li>Click on “New Applet”</li>
+						<li>Click on the “this” section and search for “Google Assistant” in the box</li>
+						<li>It will prompt you to choose a trigger. You can choose what you want but for a basic setup, choose “Say a simple phrase”</li>
+						<li>Follow the directions and fill out the form. Then click create trigger.</li>
+						<li>Click on the “that” section and search for “Adafruit” in the box</li>
+						<li>There will be one action available labeled as “send data to adafruit io”</li>
+						<li>The feed name should read “Entertainment Center”. If it does not try the drop down and select it</li>
+						<li>In data to save, you will put the number commands according to the above chart.</li>
+						<li>Click create action, and then finish, and the command is saved!</li>
+					</ol>
+				</div>
+				<div class="col-md-4">
+					<img src="images/entertainment-controller/command-setup.PNG" class="img-responsive" style="margin-left: auto; margin-right: auto;">
+				</div>
+			</div>
+
+			<h3 id=Device-circuit>Device Circuit</h3>
+			<div class="row">
+				<div class="col-md-8">
+					<p class="description">
+						The physical device is a small board powered by USB. There is a power switch in the event the device needs to be powered off or reset. When booting, the red light will appear and a blue light will blink a couple times as it connects to the WiFi. If for any reason the blue light is on solid, power off the device immediately because something is wrong.
+					</p>
+					<br>
+					<img src="images/entertainment-controller/circuit-diagram.png" class="img-responsive">
+					<br>
+				</div>
+				<div class="col-md-4">
+					<img src="images/entertainment-controller/final.png" class="img-responsive">
+				</div>
+			</div>
+			<p class="description"> 
+				The circuit is simple consisting of an AMS1117 to power the ESP with a steady 3.3V. The resistor setup ensures the GPIO pin is pulled high for a normal boot. The 2N222 NPN transistor controls the two IR LEDs which need more current and voltage than the ESP can handle. 
+			</p>
+			<p class="description">
+				The physical device can be reprogrammed if the ESP is removed and connected to a computer for reprogramming. 
+			</p>
+
+			<h3 id="Code">Code</h3>
+			<p class="description">
+				Code for this device was written in the Arduino IDE and utilizes the Adafruit MQTT libraries as well as the IRremote libraries for ESP8266. 
+			</p>
+			<p class="description">
+				Setup begins by setting up and connecting to the WiFi. Once successfully connected, the device subscribes to the correct MQTT topic. From there, the loop code keeps the MQTT connection alive and checks for messages on the subscribed topic. If a message is received, the message is converted to integers and sent to the process function to be broken down into individual numbers. As the numbers get split, they are sent to another function "runit" which runs the commands. If there are more commands that still need to be processed, the input number will still be greater than or equal to 0 and the process function calls itself until the remaining command is less than 0. The run function works by taking the input numbers through a bunch of case statements and outputting the correct IR code from the device.  
+			</p>
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="code/entertainment-controller/Entertainment_Center_MQTT.ino" target="_blank" class="description">View code in browser</a>
+				</div>
+				<div class="col-sm-6">
+					<a download="code/entertainment-controller/Entertainment_Center_MQTT.ino" target="_blank" class="description">Download Code</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<footer class="container-fluid text-left">
+  <br><br>
+  <p>© 2020 Jacob Voshage</p>
+</footer>
+
+</body>
+</html>
